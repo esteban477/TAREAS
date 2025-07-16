@@ -1,182 +1,167 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tareas</title>
-    <!-- Incluyendo Tailwind CSS para un diseño moderno -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Incluyendo la fuente Inter para una mejor tipografía -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Estilo personalizado para el cuerpo de la página */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Estilo para la animación de entrada de las tareas */
-        .task-enter {
-            animation: slideIn 0.3s ease-out forwards;
-        }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Tareas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .task-enter {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <div class="container mx-auto max-w-2xl px-4 py-8 md:py-16">
+    <header class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white">Mi Lista de Tareas</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Organiza tu día, una tarea a la vez.</p>
+    </header>
 
-    <div class="container mx-auto max-w-2xl px-4 py-8 md:py-16">
-        
-        <!-- Encabezado de la aplicación -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white">Mi Lista de Tareas</h1>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">Organiza tu día, una tarea a la vez.</p>
-        </header>
-
-        <!-- Formulario para agregar nuevas tareas -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-            <form id="new-task-form" class="flex flex-col sm:flex-row gap-4">
-                <input 
-                    type="text" 
-                    id="new-task-input" 
-                    placeholder="¿Qué necesitas hacer?" 
-                    class="flex-grow bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 dark:focus:border-blue-400 rounded-lg px-4 py-3 text-lg outline-none transition-colors"
-                >
-                <button 
-                    type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105"
-                >
-                    Agregar Tarea
-                </button>
-            </form>
-        </div>
-
-        <!-- Sección donde se mostrarán las tareas -->
-        <main id="task-list-container">
-            <!-- Las tareas se agregarán aquí dinámicamente con JavaScript -->
-        </main>
-
-        <!-- Mensaje cuando no hay tareas -->
-        <div id="empty-state" class="text-center py-12 hidden">
-             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 class="mt-2 text-xl font-medium text-gray-900 dark:text-white">¡Todo listo!</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">No tienes tareas pendientes. Agrega una nueva para empezar.</p>
-        </div>
-
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+      <form id="new-task-form" class="flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          id="new-task-input"
+          placeholder="¿Qué necesitas hacer?"
+          class="flex-grow bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 dark:focus:border-blue-400 rounded-lg px-4 py-3 text-lg outline-none transition-colors"
+        />
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:scale-105"
+        >
+          Agregar Tarea
+        </button>
+      </form>
     </div>
 
-    <script>
-        // --- SELECCIÓN DE ELEMENTOS DEL DOM ---
-        const form = document.getElementById('new-task-form');
-        const input = document.getElementById('new-task-input');
-        const taskListContainer = document.getElementById('task-list-container');
-        const emptyState = document.getElementById('empty-state');
+    <main id="task-list-container"></main>
 
-        // --- ESTADO DE LA APLICACIÓN ---
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    <div id="empty-state" class="text-center py-12 hidden">
+      <svg
+        class="mx-auto h-12 w-12 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          vector-effect="non-scaling-stroke"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <h3 class="mt-2 text-xl font-medium text-gray-900 dark:text-white">¡Todo listo!</h3>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">No tienes tareas pendientes. Agrega una nueva para empezar.</p>
+    </div>
+  </div>
 
-        // --- FUNCIONES ---
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-        /**
-         * Guarda el array de tareas actual en el localStorage del navegador.
-         */
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCnDnpqgP_LExV0NiiA0rB5-o4g_lzIHKo",
+      authDomain: "tareas-7c993.firebaseapp.com",
+      projectId: "tareas-7c993",
+      storageBucket: "tareas-7c993.firebasestorage.app",
+      messagingSenderId: "746968638962",
+      appId: "1:746968638962:web:e125dce17e24788bb8776b"
+    };
 
-        /**
-         * Actualiza la visibilidad del mensaje "sin tareas pendientes".
-         */
-        function updateEmptyState() {
-            if (tasks.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-            }
-        }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        /**
-         * Renderiza (dibuja) la lista de tareas en la pantalla.
-         */
-        function renderTasks() {
-            taskListContainer.innerHTML = '';
+    const form = document.getElementById('new-task-form');
+    const input = document.getElementById('new-task-input');
+    const taskListContainer = document.getElementById('task-list-container');
+    const emptyState = document.getElementById('empty-state');
 
-            tasks.forEach((task, index) => {
-                const taskElement = document.createElement('div');
-                // Se eliminó la lógica de estilo para tareas completadas.
-                taskElement.className = `task-enter bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4 flex items-center justify-between transition-colors`;
-                
-                taskElement.innerHTML = `
-                    <div class="flex items-center flex-grow">
-                        <input type="checkbox" class="h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" data-index="${index}" aria-label="Completar tarea">
-                        <p class="ml-4 text-lg text-gray-800 dark:text-gray-200">${task.text}</p>
-                    </div>
-                    <button class="text-red-500 hover:text-red-700 dark:hover:text-red-400 font-semibold transition-colors flex-shrink-0" data-index="${index}">
-                        Eliminar
-                    </button>
-                `;
-                
-                taskListContainer.appendChild(taskElement);
-            });
+    let tasks = [];
+    const tasksCollection = db.collection('tasks');
 
-            updateEmptyState();
-        }
+    function updateEmptyState() {
+      if (tasks.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
 
-        /**
-         * Agrega una nueva tarea a nuestra lista.
-         * @param {string} text - El texto de la nueva tarea.
-         */
-        function addTask(text) {
-            if (text.trim() === '') return;
-            // El objeto de tarea ya no necesita la propiedad 'completed'.
-            tasks.push({ text: text });
-            saveTasks();
-            renderTasks();
-        }
-
-        /**
-         * Elimina una tarea de la lista.
-         * @param {number} index - La posición de la tarea en el array.
-         */
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            saveTasks();
-            renderTasks();
-        }
-
-        // --- MANEJADORES DE EVENTOS ---
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            addTask(input.value);
-            input.value = '';
+    function loadTasks() {
+      tasksCollection.get().then(snapshot => {
+        tasks = [];
+        snapshot.forEach(doc => {
+          tasks.push({ id: doc.id, ...doc.data() });
         });
-
-        taskListContainer.addEventListener('click', (e) => {
-            const target = e.target;
-            const index = target.dataset.index;
-
-            if (index === undefined) return;
-
-            // CAMBIO: Ahora, tanto el checkbox como el botón de eliminar llaman a deleteTask.
-            if (target.type === 'checkbox' || target.tagName === 'BUTTON') {
-                deleteTask(parseInt(index));
-            }
-        });
-
-        // --- INICIALIZACIÓN ---
         renderTasks();
+      });
+    }
 
-    </script>
+    function addTask(text) {
+      if (!text.trim()) return;
+      tasksCollection.add({ text }).then(() => {
+        input.value = '';
+        loadTasks();
+      });
+    }
+
+    function deleteTask(id) {
+      tasksCollection.doc(id).delete().then(loadTasks);
+    }
+
+    function renderTasks() {
+      taskListContainer.innerHTML = '';
+      if (tasks.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+
+      tasks.forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task-enter bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4 flex items-center justify-between';
+        div.innerHTML = `
+          <div class="flex items-center flex-grow">
+            <input type="checkbox" class="h-6 w-6 rounded border-gray-300 text-blue-600 cursor-pointer" disabled />
+            <p class="ml-4 text-lg text-gray-800 dark:text-gray-200">${task.text}</p>
+          </div>
+          <button class="text-red-500 hover:text-red-700 dark:hover:text-red-400 font-semibold transition-colors flex-shrink-0" data-id="${task.id}">
+            Eliminar
+          </button>
+        `;
+        taskListContainer.appendChild(div);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      addTask(input.value);
+    });
+
+    taskListContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-id]');
+      if (btn) deleteTask(btn.dataset.id);
+    });
+
+    loadTasks();
+  </script>
 </body>
 </html>
